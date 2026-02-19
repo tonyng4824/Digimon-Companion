@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkEvolution - Lilithmon AI Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Quicksand:wght@300;500;700&display=swap');
+        
+        :root {
+            --dark-purple: #1a0033;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff006e;
+            --blood-red: #8b0000;
+            --gold: #ffd700;
+            --darkness: #0d001a;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--darkness);
+            color: #fff;
+            overflow: hidden;
+            margin: 0;
+        }
+        
+        .cinzel { font-family: 'Cinzel', serif; }
+        
+        /* Dark Aura Background */
+        .dark-aura {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(176, 38, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(139, 0, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: aura-shift 10s ease-in-out infinite;
+        }
+        
+        @keyframes aura-shift {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+        
+        /* Floating Hearts/Runes */
+        .floating-rune {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.3;
+            animation: float-up 8s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes float-up {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Digivolve Animation - Dark Version */
+        @keyframes dark-digivolve {
+            0% { transform: scale(1) rotate(0deg); filter: brightness(1) hue-rotate(0deg); }
+            25% { transform: scale(1.3) rotate(-10deg); filter: brightness(2) hue-rotate(90deg) saturate(2); }
+            50% { transform: scale(0.9) rotate(10deg); filter: brightness(3) hue-rotate(180deg) blur(2px); }
+            75% { transform: scale(1.4) rotate(-5deg); filter: brightness(2) hue-rotate(270deg); }
+            100% { transform: scale(1) rotate(0deg); filter: brightness(1) hue-rotate(360deg); }
+        }
+        
+        .digivolving {
+            animation: dark-digivolve 3s ease-in-out;
+        }
+        
+        /* Pulse Glow - Dark */
+        @keyframes dark-pulse {
+            0%, 100% { box-shadow: 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple); }
+            50% { box-shadow: 0 0 40px var(--neon-pink), 0 0 80px var(--blood-red); }
+        }
+        
+        .dark-glow { animation: dark-pulse 3s infinite; }
+        
+        /* Seduction Pulse for Lilithmon */
+        @keyframes seduction-pulse {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.6)); }
+            50% { filter: drop-shadow(0 0 40px rgba(176, 38, 255, 0.8)) brightness(1.2); }
+        }
+        
+        .seduction-aura { animation: seduction-pulse 2s ease-in-out infinite; }
+        
+        /* X-Antibody Aura */
+        @keyframes x-aura {
+            0%, 100% { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8)) hue-rotate(0deg); }
+            50% { filter: drop-shadow(0 0 60px rgba(255, 0, 110, 1)) hue-rotate(45deg); }
+        }
+        
+        .x-antibody-aura { animation: x-aura 3s ease-in-out infinite; }
+        
+        /* Chat Bubble - Dark Theme */
+        .dark-chat {
+            background: linear-gradient(135deg, rgba(26, 0, 51, 0.9), rgba(13, 0, 26, 0.9));
+            border: 1px solid rgba(176, 38, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(176, 38, 255, 0.2);
+        }
+        
+        .dark-chat::before {
+            border-color: rgba(176, 38, 255, 0.4) transparent transparent transparent;
+        }
+        
+        /* Evolution Cards */
+        .evo-card {
+            background: linear-gradient(135deg, rgba(26, 0, 51, 0.6), rgba(0, 0, 0, 0.8));
+            border: 1px solid rgba(176, 38, 255, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .evo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(176, 38, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+        
+        .evo-card:hover::before {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+        
+        .evo-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 10px 30px rgba(176, 38, 255, 0.4);
+        }
+        
+        .evo-card.selected {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(26, 0, 51, 0.9));
+        }
+        
+        .evo-card.locked {
+            opacity: 0.4;
+            filter: grayscale(0.8);
+            cursor: not-allowed;
+        }
+        
+        /* Stats Bars */
+        .stat-bar-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .stat-bar {
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Glitch Text Effect */
+        .glitch-text {
+            position: relative;
+            animation: glitch-skew 1s infinite;
+        }
+        
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-2deg); }
+            40% { transform: skew(2deg); }
+            60% { transform: skew(-1deg); }
+            80% { transform: skew(1deg); }
+            100% { transform: skew(0deg); }
+        }
+        
+        /* Button Styles */
+        .dark-btn {
+            background: linear-gradient(135deg, rgba(176, 38, 255, 0.2), rgba(255, 0, 110, 0.2));
+            border: 1px solid rgba(176, 38, 255, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-btn:hover {
+            background: linear-gradient(135deg, rgba(176, 38, 255, 0.4), rgba(255, 0, 110, 0.4));
+            border-color: var(--neon-pink);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(176, 38, 255, 0.4);
+        }
+        
+        .dark-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* X-Antibody Button */
+        .x-btn {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(176, 38, 255, 0.2));
+            border: 1px solid rgba(255, 215, 0, 0.6);
+            color: var(--gold);
+            animation: x-pulse 2s infinite;
+        }
+        
+        @keyframes x-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+        }
+        
+        /* Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.3;
+        }
+        
+        /* Desire Indicators */
+        .desire-bubble {
+            animation: desire-float 3s ease-in-out infinite;
+        }
+        
+        @keyframes desire-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Typewriter Cursor */
+        .cursor-blink {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: var(--neon-pink);
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-purple); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+    <div class="dark-aura"></div>
+    <div class="scanlines"></div>
+    <div id="rune-container"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-purple-900/50 bg-black/40 backdrop-blur-md p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-900 to-pink-900 flex items-center justify-center dark-glow border border-purple-500/50">
+                    <span class="text-2xl">🌙</span>
+                </div>
+                <div>
+                    <h1 class="cinzel text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400 glitch-text">
+                        DARK EVOLUTION
+                    </h1>
+                    <p class="text-xs text-pink-300/70 tracking-[0.3em] uppercase">Seven Great Demon Lords Series</p>
+                </div>
+            </div>
+            <div class="flex gap-6 text-sm">
+                <div class="flex flex-col items-end">
+                    <span class="text-purple-400 text-xs uppercase tracking-wider">Current Phase</span>
+                    <span id="phase-display" class="cinzel text-pink-400 font-bold">ROOKIE</span>
+                </div>
+                <div class="w-px bg-purple-800"></div>
+                <div class="flex flex-col items-end">
+                    <span class="text-purple-400 text-xs uppercase tracking-wider">Virus Load</span>
+                    <span id="virus-display" class="cinzel text-red-400 font-bold">12%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 relative z-10 flex max-w-7xl mx-auto w-full p-6 gap-6 overflow-hidden">
+        
+        <!-- Left: Digimon Display -->
+        <section class="flex-1 flex flex-col gap-6">
+            <!-- Main Stage -->
+            <div class="flex-1 bg-gradient-to-b from-purple-950/30 to-black/60 border border-purple-800/30 rounded-2xl p-8 relative overflow-hidden backdrop-blur-sm">
+                <!-- Top Stats -->
+                <div class="absolute top-6 left-6 right-6 flex justify-between">
+                    <div class="bg-black/60 border border-purple-500/30 rounded-lg px-4 py-2 backdrop-blur-md">
+                        <div class="text-xs text-purple-400 uppercase tracking-wider">Attribute</div>
+                        <div id="attr-display" class="cinzel text-lg font-bold text-pink-400">VIRUS</div>
+                    </div>
+                    <div class="bg-black/60 border border-purple-500/30 rounded-lg px-4 py-2 backdrop-blur-md text-right">
+                        <div class="text-xs text-purple-400 uppercase tracking-wider">Field</div>
+                        <div id="field-display" class="cinzel text-lg font-bold text-purple-300">NIGHTMARE SOLDIERS</div>
+                    </div>
+                </div>
+
+                <!-- Digimon Visual -->
+                <div class="h-full flex items-center justify-center relative">
+                    <div id="digimon-aura" class="absolute inset-0 bg-purple-600/10 rounded-full blur-3xl scale-150 animate-pulse"></div>
+                    <div id="digimon-container" class="relative z-10 cursor-pointer transition-transform hover:scale-105">
+                        <div id="digimon-sprite" class="text-[220px] filter drop-shadow-[0_0_50px_rgba(176,38,255,0.6)] transition-all duration-700">
+                            🐕
+                        </div>
+                        <!-- Desire Indicators -->
+                        <div id="desires" class="absolute -top-10 left-1/2 transform -translate-x-1/2 flex gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="absolute bottom-6 left-6 right-6 bg-black/70 border border-purple-500/30 rounded-xl p-5 backdrop-blur-md">
+                    <div class="flex justify-between items-start mb-2">
+                        <h2 id="digimon-name" class="cinzel text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
+                            Salamon
+                        </h2>
+                        <span id="level-badge" class="px-3 py-1 rounded-full bg-purple-900/50 border border-purple-500/30 text-xs text-purple-300 uppercase tracking-wider">
+                            Rookie
+                        </span>
+                    </div>
+                    <p id="digimon-desc" class="text-sm text-gray-300 leading-relaxed">
+                        A holy-type Digimon that harbors the potential for both light and darkness. Its innocent appearance masks a deep capacity for dark evolution.
+                    </p>
+                    <div id="special-traits" class="mt-3 flex gap-2 flex-wrap"></div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="grid grid-cols-5 gap-4">
+                <button onclick="companion.caress()" class="dark-btn rounded-xl p-4 flex flex-col items-center gap-2 group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">💜</span>
+                    <span class="text-xs text-purple-300 uppercase tracking-wider">Caress</span>
+                </button>
+                <button onclick="companion.feed('dark')" class="dark-btn rounded-xl p-4 flex flex-col items-center gap-2 group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">🥩</span>
+                    <span class="text-xs text-purple-300 uppercase tracking-wider">Dark Feed</span>
+                </button>
+                <button onclick="companion.train('darkness')" class="dark-btn rounded-xl p-4 flex flex-col items-center gap-2 group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">⚔️</span>
+                    <span class="text-xs text-purple-300 uppercase tracking-wider">Dark Training</span>
+                </button>
+                <button onclick="companion.seduce()" class="dark-btn rounded-xl p-4 flex flex-col items-center gap-2 group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">💋</span>
+                    <span class="text-xs text-purple-300 uppercase tracking-wider">Seduce</span>
+                </button>
+                <button onclick="companion.corrupt()" class="dark-btn rounded-xl p-4 flex flex-col items-center gap-2 group border-red-900/50 hover:border-red-500/50">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">🔮</span>
+                    <span class="text-xs text-red-300 uppercase tracking-wider">Corrupt</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Right: Stats & Evolution -->
+        <section class="w-96 flex flex-col gap-4">
+            
+            <!-- Emotional Matrix -->
+            <div class="bg-black/40 border border-purple-800/30 rounded-xl p-5 backdrop-blur-sm">
+                <h3 class="cinzel text-sm font-bold text-purple-400 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                    <span class="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
+                    Emotional Matrix
+                </h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-pink-400 uppercase tracking-wider">Seduction</span>
+                            <span id="seduction-val" class="text-white font-mono">25%</span>
+                        </div>
+                        <div class="stat-bar-container h-2">
+                            <div id="seduction-bar" class="stat-bar h-full bg-gradient-to-r from-pink-600 to-pink-400 w-1/4"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-purple-400 uppercase tracking-wider">Darkness</span>
+                            <span id="darkness-val" class="text-white font-mono">15%</span>
+                        </div>
+                        <div class="stat-bar-container h-2">
+                            <div id="darkness-bar" class="stat-bar h-full bg-gradient-to-r from-purple-800 to-purple-500 w-[15%]"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-red-400 uppercase tracking-wider">Corruption</span>
+                            <span id="corruption-val" class="text-white font-mono">10%</span>
+                        </div>
+                        <div class="stat-bar-container h-2">
+                            <div id="corruption-bar" class="stat-bar h-full bg-gradient-to-r from-red-900 to-red-500 w-[10%]"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-yellow-400 uppercase tracking-wider">Loyalty</span>
+                            <span id="loyalty-val" class="text-white font-mono">40%</span>
+                        </div>
+                        <div class="stat-bar-container h-2">
+                            <div id="loyalty-bar" class="stat-bar h-full bg-gradient-to-r from-yellow-700 to-yellow-400 w-2/5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evolution Path -->
+            <div class="flex-1 bg-black/40 border border-purple-800/30 rounded-xl p-5 backdrop-blur-sm flex flex-col overflow-hidden">
+                <h3 class="cinzel text-sm font-bold text-purple-400 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                    <span>◈</span>
+                    Dark Evolution Route
+                </h3>
+                
+                <div id="evolution-path" class="flex-1 overflow-y-auto space-y-3 pr-2">
+                    <!-- Evolution cards injected here -->
+                </div>
+
+                <button id="digivolve-btn" onclick="companion.attemptDigivolve()" disabled 
+                    class="mt-4 w-full py-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-600/30 rounded-xl text-purple-300 font-bold cinzel uppercase tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:border-pink-500 hover:enabled:text-pink-300 hover:enabled:shadow-[0_0_30px_rgba(176,38,255,0.5)] relative overflow-hidden group">
+                    <span class="relative z-10">Initialize Digivolution</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-pink-600/20 to-purple-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                </button>
+
+                <button id="x-evolve-btn" onclick="companion.attemptXEvolution()" disabled 
+                    class="mt-2 w-full py-3 bg-gradient-to-r from-yellow-900/30 to-purple-900/30 border border-yellow-600/30 rounded-xl text-yellow-500 font-bold cinzel uppercase tracking-widest text-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:border-yellow-400 hover:enabled:text-yellow-300 hidden">
+                    ⚠️ X-ANTIBODY OVERRIDE ⚠️
+                </button>
+            </div>
+
+            <!-- Neural Link -->
+            <div class="bg-black/40 border border-purple-800/30 rounded-xl p-4 backdrop-blur-sm h-64 flex flex-col">
+                <h3 class="cinzel text-sm font-bold text-purple-400 mb-3 flex items-center gap-2 uppercase tracking-wider">
+                    <span>◉</span>
+                    Dark Neural Link
+                </h3>
+                <div id="chat-history" class="flex-1 overflow-y-auto space-y-3 mb-3 text-sm pr-1">
+                    <div class="dark-chat p-3 rounded-lg text-gray-300 text-xs relative">
+                        <span class="text-pink-400 font-bold cinzel">Salamon:</span>
+                        <span id="initial-text">*tilts head* Will you guide me down the path of darkness, Tamer?</span>
+                        <span class="cursor-blink"></span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Speak to your demon..." 
+                        class="flex-1 bg-black/50 border border-purple-700/50 rounded-lg px-4 py-2 text-sm text-white placeholder-purple-800 focus:outline-none focus:border-pink-500/50 transition-colors"
+                        onkeypress="if(event.key==='Enter') companion.speakTo()">
+                    <button onclick="companion.speakTo()" 
+                        class="bg-purple-800 hover:bg-pink-700 text-white px-4 py-2 rounded-lg transition-colors border border-purple-600">
+                        SEND
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Dark Evolution Database
+        const DARK_EVOLUTION_DB = {
+            'salamon': {
+                name: 'Salamon',
+                level: 'Rookie',
+                emoji: '🐕',
+                attribute: 'VACCINE',
+                field: 'VIRUS BUSTERS',
+                desc: 'A holy-type Digimon that harbors the potential for both light and darkness. Its innocent appearance masks a deep capacity for dark evolution.',
+                next: 'blackgatomon',
+                requirements: { darkness: 30, corruption: 20, seduction: 25 },
+                traits: ['Holy Ring', 'Latent Darkness'],
+                aura: 'drop-shadow(0 0 30px rgba(255,255,255,0.3))',
+                quotes: {
+                    neutral: "*puppy eyes* I trust you completely, Tamer...",
+                    seduce: "*rubs against you* Do you prefer me... or what I could become?",
+                    dark: "*ears twitch* I hear the whispers... the shadows call...",
+                    corrupt: "*whimpers* Something dark grows inside me..."
+                }
+            },
+            'blackgatomon': {
+                name: 'BlackGatomon',
+                level: 'Champion',
+                emoji: '🐱‍👤',
+                attribute: 'VIRUS',
+                field: 'NIGHTMARE SOLDIERS',
+                desc: 'A fallen angel Digimon. Once a holy Gatomon, it embraced darkness. It wears the sacred rings as trophies of its corruption.',
+                next: 'bastemon',
+                requirements: { darkness: 60, corruption: 50, seduction: 55, loyalty: 50 },
+                traits: ['Virus Buster', 'Dark Ring', 'Seducer'],
+                aura: 'drop-shadow(0 0 40px rgba(176,38,255,0.6))',
+                quotes: {
+                    neutral: "*stretches* Much better... the darkness suits me, don't you think?",
+                    seduce: "*circles you* I could teach you pleasures beyond the light...",
+                    dark: "*claws extend* Shall we hunt some angels tonight?",
+                    corrupt: "The Virus spreads... I feel power surging through my fur..."
+                }
+            },
+            'bastemon': {
+                name: 'Bastemon',
+                level: 'Ultimate',
+                emoji: '👑',
+                attribute: 'VIRUS',
+                field: 'NIGHTMARE SOLDIERS',
+                desc: 'A beast-goddess Digimon ruling over dark ruins. Its beauty captivates all who gaze upon it, draining their will to resist.',
+                next: 'lilithmon',
+                requirements: { darkness: 85, corruption: 80, seduction: 90, loyalty: 70 },
+                traits: ['Dark Goddess', 'Charm', 'Necromancer'],
+                aura: 'drop-shadow(0 0 50px rgba(255,0,110,0.7))',
+                quotes: {
+                    neutral: "*reclines on throne* Kneel before your queen, Tamer.",
+                    seduce: "*extends hand* One kiss, and your soul is mine forever...",
+                    dark: "The shadows bow to me. Soon, so will the Digital World.",
+                    corrupt: "Can you feel it? Lilithmon's power calls to me..."
+                }
+            },
+            'lilithmon': {
+                name: 'Lilithmon',
+                level: 'Mega',
+                emoji: '😈',
+                attribute: 'VIRUS',
+                field: 'NIGHTMARE SOLDIERS',
+                desc: 'One of the Seven Great Demon Lords, representing the sin of Lust. The "Goddess of Darkness" who tempts all with forbidden pleasures.',
+                next: 'lilithmon_x',
+                requirements: { darkness: 100, corruption: 100, seduction: 100, loyalty: 90 },
+                traits: ['Demon Lord', 'Sin of Lust', 'Dark Poison'],
+                aura: 'drop-shadow(0 0 60px rgba(176,38,255,0.9))',
+                specialClass: 'seduction-aura',
+                quotes: {
+                    neutral: "*dark laughter* Finally... I have ascended to my true form.",
+                    seduce: "Come closer, Tamer. Let me show you why mortals sell their souls...",
+                    dark: "I am the sin that consumes worlds. And you... you are mine.",
+                    corrupt: "The X-Antibody awaits... ultimate power is within reach."
+                }
+            },
+            'lilithmon_x': {
+                name: 'Lilithmon (X-Antibody)',
+                level: 'Mega X',
+                emoji: '👿',
+                attribute: 'VIRUS',
+                field: 'NIGHTMARE SOLDIERS',
+                desc: 'The transcended form. The X-Antibody has amplified its beauty to lethal levels. Reality itself bends to its seductive will.',
+                next: null,
+                requirements: { maxBond: true },
+                traits: ['X-Antibody', 'Absolute Lust', 'Reality Warper', 'Demon Lord X'],
+                aura: 'drop-shadow(0 0 80px rgba(255,215,0,0.8))',
+                specialClass: 'x-antibody-aura',
+                quotes: {
+                    neutral: "*reality distorts* Even the gods tremble before my beauty now.",
+                    seduce: "I am the beginning and end of desire. Worship me, and know oblivion.",
+                    dark: "The Digital World shall be my garden of pleasures... and you, my favorite flower.",
+                    corrupt: "Perfection achieved. We are eternal, Tamer."
+                }
+            }
+        };
+
+        class DarkCompanion {
+            constructor() {
+                this.currentForm = 'salamon';
+                this.stats = {
+                    seduction: 25,
+                    darkness: 15,
+                    corruption: 10,
+                    loyalty: 40,
+                    battles: 0,
+                    desires: []
+                };
+                this.emotion = 'neutral';
+                this.selectedEvolution = null;
+                this.xUnlocked = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateDisplay();
+                this.renderEvolutionPath();
+                this.startDarkPulse();
+                this.generateRunes();
+                
+                // Initial dialogue
+                setTimeout(() => {
+                    this.typewriter("salamon", "The darkness feels... warm. Will you be my guiding light into shadow?");
+                }, 1500);
+            }
+
+            generateRunes() {
+                const container = document.getElementById('rune-container');
+                const runes = ['✦', '✧', '⚜', '𓂀', '☥', '⚚', '⛧'];
+                
+                setInterval(() => {
+                    const rune = document.createElement('div');
+                    rune.className = 'floating-rune';
+                    rune.textContent = runes[Math.floor(Math.random() * runes.length)];
+                    rune.style.left = Math.random() * 100 + 'vw';
+                    rune.style.color = `hsl(${Math.random() * 60 + 280}, 100%, 70%)`;
+                    rune.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    container.appendChild(rune);
+                    setTimeout(() => rune.remove(), 8000);
+                }, 800);
+            }
+
+            startDarkPulse() {
+                setInterval(() => {
+                    // Gradual darkness increase
+                    this.stats.darkness = Math.min(100, this.stats.darkness + 0.5);
+                    this.stats.corruption = Math.min(100, this.stats.corruption + 0.3);
+                    
+                    // Update desires based on stats
+                    this.updateDesires();
+                    this.updateDisplay();
+                    this.checkEvolutionReadiness();
+                }, 3000);
+            }
+
+            updateDesires() {
+                const desires = [];
+                const form = DARK_EVOLUTION_DB[this.currentForm];
+                
+                if (this.stats.seduction < 50) desires.push({ icon: '💋', text: 'Wants attention' });
+                if (this.stats.darkness < 40) desires.push({ icon: '🌑', text: 'Craves darkness' });
+                if (this.stats.corruption < 30) desires.push({ icon: '🔮', text: 'Seeks corruption' });
+                if (this.stats.loyalty < 60) desires.push({ icon: '💜', text: 'Needs devotion' });
+                
+                // Evolution desire
+                if (form.next && this.canEvolve(form.next)) {
+                    desires.push({ icon: '⚡', text: 'Ready to evolve!' });
+                }
+                
+                this.stats.desires = desires;
+                this.renderDesires();
+            }
+
+            renderDesires() {
+                const container = document.getElementById('desires');
+                container.innerHTML = this.stats.desires.map(d => 
+                    `<div class="desire-bubble bg-black/60 border border-pink-500/30 rounded-full px-3 py-1 text-xs text-pink-300 backdrop-blur-sm">
+                        ${d.icon} ${d.text}
+                    </div>`
+                ).join('');
+            }
+
+            caress() {
+                this.stats.seduction = Math.min(100, this.stats.seduction + 15);
+                this.stats.loyalty = Math.min(100, this.stats.loyalty + 10);
+                this.emotion = 'seduce';
+                this.showEffect('💜');
+                this.speak('caress');
+                this.updateDisplay();
+            }
+
+            feed(type) {
+                if (type === 'dark') {
+                    this.stats.darkness = Math.min(100, this.stats.darkness + 20);
+                    this.stats.corruption = Math.min(100, this.stats.corruption + 10);
+                    this.emotion = 'dark';
+                    this.showEffect('🥩');
+                    this.speak('feed');
+                }
+                this.updateDisplay();
+            }
+
+            train(type) {
+                if (type === 'darkness') {
+                    this.stats.darkness = Math.min(100, this.stats.darkness + 25);
+                    this.stats.battles += 1;
+                    this.emotion = 'dark';
+                    this.showEffect('⚔️');
+                    this.speak('train');
+                }
+                this.updateDisplay();
+            }
+
+            seduce() {
+                this.stats.seduction = Math.min(100, this.stats.seduction + 20);
+                this.stats.corruption = Math.min(100, this.stats.corruption + 15);
+                this.emotion = 'seduce';
+                this.showEffect('💋');
+                this.speak('seduce');
+                this.updateDisplay();
+            }
+
+            corrupt() {
+                this.stats.corruption = Math.min(100, this.stats.corruption + 30);
+                this.stats.darkness = Math.min(100, this.stats.darkness + 15);
+                this.emotion = 'corrupt';
+                this.showEffect('🔮');
+                this.speak('corrupt');
+                this.updateDisplay();
+            }
+
+            speak(context) {
+                const form = DARK_EVOLUTION_DB[this.currentForm];
+                let quote = form.quotes[this.emotion] || form.quotes.neutral;
+                
+                if (context && form.quotes[context]) {
+                    quote = form.quotes[context];
+                }
+                
+                this.typewriter(this.currentForm, quote);
+            }
+
+            speakTo() {
+                const input = document.getElementById('chat-input');
+                const text = input.value.trim();
+                if (!text) return;
+                
+                input.value = '';
+                this.addChatMessage('Tamer', text, 'user');
+                
+                setTimeout(() => {
+                    const response = this.generateResponse(text);
+                    this.typewriter(this.currentForm, response);
+                }, 600);
+            }
+
+            generateResponse(input) {
+                const lower = input.toLowerCase();
+                const form = DARK_EVOLUTION_DB[this.currentForm];
+                
+                if (lower.includes('evolve') || lower.includes('digivolve')) {
+                    if (form.next && this.canEvolve(form.next)) {
+                        return "I feel the darkness surging! I can evolve further into my true form! Select the path...";
+                    } else if (!form.next) {
+                        return "I have reached the pinnacle of dark evolution. Only the X-Antibody remains...";
+                    } else {
+                        return "Not yet... corrupt me more, Tamer. I need more darkness to transcend.";
+                    }
+                }
+                
+                if (lower.includes('beautiful') || lower.includes('pretty') || lower.includes('sexy')) {
+                    this.stats.seduction = Math.min(100, this.stats.seduction + 10);
+                    return "*blushes darkly* Flattery will get you everywhere... keep speaking such sweet words.";
+                }
+                
+                if (lower.includes('love') || lower.includes('like')) {
+                    this.stats.loyalty = Math.min(100, this.stats.loyalty + 15);
+                    return "Love? In the darkness, such emotions become obsession. I shall consume you completely.";
+                }
+                
+                if (lower.includes('dark') || lower.includes('shadow')) {
+                    this.stats.darkness = Math.min(100, this.stats.darkness + 5);
+                    return "Yes... embrace the void. There is truth in darkness that light cannot show.";
+                }
+                
+                if (lower.includes('x-antibody') || lower.includes('x抗体')) {
+                    if (this.currentForm === 'lilithmon') {
+                        return "The X-Antibody... ultimate transcendence. Are you prepared to unlock my true potential?";
+                    } else {
+                        return "Patience, Tamer. That power is reserved for Demon Lords.";
+                    }
+                }
+                
+                if (lower.includes('hello') || lower.includes('hi')) {
+                    return `Greetings, Tamer. I am ${form.name}, your dark companion. How shall we sin today?`;
+                }
+                
+                // Contextual responses
+                if (this.stats.corruption > 80) return "The corruption spreads... soon I shall be irresistible.";
+                if (this.stats.seduction > 80) return "*moves closer* Your heartbeat quickens. You cannot hide your desire.";
+                if (this.stats.darkness > 80) return "Shadows coil around us. Can you feel the power growing?";
+                
+                const generic = [
+                    "Speak your desires, Tamer. I am listening...",
+                    "The Digital World will kneel before us. Together.",
+                    "Do you fear the darkness? Or do you crave it?",
+                    "My beauty is both blessing and curse. Gaze upon me if you dare.",
+                    "Every moment with you deepens my darkness... and my affection."
+                ];
+                
+                return generic[Math.floor(Math.random() * generic.length)];
+            }
+
+            typewriter(formKey, text) {
+                const form = DARK_EVOLUTION_DB[formKey];
+                const history = document.getElementById('chat-history');
+                const div = document.createElement('div');
+                div.className = 'dark-chat p-3 rounded-lg text-gray-300 text-xs relative mr-8';
+                div.innerHTML = `<span class="text-pink-400 font-bold cinzel">${form.name}:</span> <span class="typing-content"></span><span class="cursor-blink"></span>`;
+                
+                history.appendChild(div);
+                history.scrollTop = history.scrollHeight;
+                
+                const content = div.querySelector('.typing-content');
+                let i = 0;
+                
+                const type = () => {
+                    if (i < text.length) {
+                        content.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, 40);
+                    } else {
+                        div.querySelector('.cursor-blink').remove();
+                    }
+                };
+                
+                type();
+            }
+
+            addChatMessage(sender, text, type) {
+                const history = document.getElementById('chat-history');
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-lg text-xs ml-8 ${type === 'user' ? 'bg-purple-900/30 border border-purple-700/30 text-purple-200' : ''}`;
+                div.innerHTML = `<span class="font-bold ${type === 'user' ? 'text-purple-300' : 'text-pink-400'}">${sender}:</span> ${text}`;
+                history.appendChild(div);
+                history.scrollTop = history.scrollHeight;
+            }
+
+            showEffect(emoji) {
+                const container = document.getElementById('digimon-container');
+                const effect = document.createElement('div');
+                effect.textContent = emoji;
+                effect.className = 'absolute text-4xl animate-bounce pointer-events-none';
+                effect.style.left = (50 + Math.random() * 40 - 20) + '%';
+                effect.style.top = '20%';
+                container.appendChild(effect);
+                setTimeout(() => effect.remove(), 1000);
+            }
+
+            canEvolve(nextForm) {
+                const req = DARK_EVOLUTION_DB[nextForm].requirements;
+                if (req.maxBond) return this.stats.loyalty >= 100 && this.xUnlocked;
+                
+                return (!req.darkness || this.stats.darkness >= req.darkness) &&
+                       (!req.corruption || this.stats.corruption >= req.corruption) &&
+                       (!req.seduction || this.stats.seduction >= req.seduction) &&
+                       (!req.loyalty || this.stats.loyalty >= req.loyalty);
+            }
+
+            checkEvolutionReadiness() {
+                const form = DARK_EVOLUTION_DB[this.currentForm];
+                if (form.next && this.canEvolve(form.next)) {
+                    document.getElementById('digivolve-btn').disabled = false;
+                    document.getElementById('digivolve-btn').classList.add('animate-pulse');
+                } else {
+                    document.getElementById('digivolve-btn').disabled = true;
+                    document.getElementById('digivolve-btn').classList.remove('animate-pulse');
+                }
+
+                // X-Antibody check
+                if (this.currentForm === 'lilithmon' && this.stats.loyalty >= 100) {
+                    document.getElementById('x-evolve-btn').classList.remove('hidden');
+                    if (this.xUnlocked) {
+                        document.getElementById('x-evolve-btn').disabled = false;
+                    }
+                }
+            }
+
+            selectEvolution(formKey) {
+                this.selectedEvolution = formKey;
+                document.querySelectorAll('.evo-card').forEach(card => card.classList.remove('selected'));
+                document.getElementById(`evo-${formKey}`).classList.add('selected');
+            }
+
+            attemptDigivolve() {
+                if (!this.selectedEvolution || !this.canEvolve(this.selectedEvolution)) {
+                    this.typewriter(this.currentForm, "I need more power... corrupt me further, Tamer.");
+                    return;
+                }
+
+                this.executeDigivolution(this.selectedEvolution);
+            }
+
+            attemptXEvolution() {
+                if (this.currentForm !== 'lilithmon' || !this.xUnlocked) return;
+                
+                this.xUnlocked = true;
+                this.executeDigivolution('lilithmon_x');
+            }
+
+            executeDigivolution(newForm) {
+                const container = document.getElementById('digimon-container');
+                const sprite = document.getElementById('digimon-sprite');
+                
+                // Digivolution sequence
+                this.typewriter(this.currentForm, "DARK DIGIVOLUTION!!!");
+                
+                container.classList.add('digivolving');
+                
+                // Dark energy effects
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => this.showEffect('💀'), i * 200);
+                }
+                
+                setTimeout(() => {
+                    this.currentForm = newForm;
+                    this.selectedEvolution = null;
+                    
+                    // Reset UI
+                    document.getElementById('digivolve-btn').disabled = true;
+                    document.getElementById('digivolve-btn').classList.remove('animate-pulse');
+                    document.querySelectorAll('.evo-card').forEach(c => c.classList.remove('selected'));
+                    
+                    container.classList.remove('digivolving');
+                    
+                    this.updateDisplay();
+                    this.renderEvolutionPath();
+                    
+                    const form = DARK_EVOLUTION_DB[this.currentForm];
+                    this.typewriter(this.currentForm, `I am ${form.name}! Behold my true power!`);
+                    
+                    // Special evolution effects
+                    if (newForm === 'lilithmon') {
+                        this.xUnlocked = true;
+                        document.getElementById('x-evolve-btn').classList.remove('hidden');
+                    }
+                }, 3000);
+            }
+
+            renderEvolutionPath() {
+                const container = document.getElementById('evolution-path');
+                container.innerHTML = '';
+                
+                const evolutionLine = ['salamon', 'blackgatomon', 'bastemon', 'lilithmon', 'lilithmon_x'];
+                const currentIndex = evolutionLine.indexOf(this.currentForm);
+                
+                evolutionLine.forEach((formKey, index) => {
+                    const form = DARK_EVOLUTION_DB[formKey];
+                    const isCurrent = index === currentIndex;
+                    const isPast = index < currentIndex;
+                    const isFuture = index > currentIndex;
+                    const isNext = index === currentIndex + 1;
+                    
+                    const card = document.createElement('div');
+                    card.id = `evo-${formKey}`;
+                    card.className = `evo-card rounded-lg p-4 ${isCurrent ? 'border-pink-500 bg-pink-900/20' : ''} ${isNext ? 'cursor-pointer' : 'locked'}`;
+                    
+                    if (isNext) {
+                        card.onclick = () => this.selectEvolution(formKey);
+                    }
+                    
+                    const statusIcon = isCurrent ? '◉ CURRENT' : isPast ? '✓ ACHIEVED' : isNext ? '○ AVAILABLE' : '◌ LOCKED';
+                    const statusColor = isCurrent ? 'text-pink-400' : isPast ? 'text-purple-400' : isNext ? 'text-green-400' : 'text-gray-600';
+                    
+                    let requirements = '';
+                    if (form.requirements && !isPast && !isCurrent) {
+                        const req = form.requirements;
+                        const parts = [];
+                        if (req.darkness) parts.push(`Darkness ${req.darkness}%`);
+                        if (req.corruption) parts.push(`Corruption ${req.corruption}%`);
+                        if (req.seduction) parts.push(`Seduction ${req.seduction}%`);
+                        if (req.loyalty) parts.push(`Loyalty ${req.loyalty}%`);
+                        requirements = parts.join(' • ');
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <div class="text-4xl ${isFuture ? 'grayscale' : ''}">${form.emoji}</div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="cinzel font-bold ${isCurrent ? 'text-pink-400' : 'text-purple-300'}">${form.name}</div>
+                                        <div class="text-xs text-gray-500 uppercase tracking-wider">${form.level}</div>
+                                    </div>
+                                    <span class="text-xs font-mono ${statusColor}">${statusIcon}</span>
+                                </div>
+                                ${requirements ? `<div class="mt-2 text-xs text-gray-400">Requires: ${requirements}</div>` : ''}
+                                ${formKey === 'lilithmon_x' ? '<div class="mt-1 text-xs text-yellow-600 uppercase tracking-wider">X-Antibody Form</div>' : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            }
+
+            updateDisplay() {
+                const form = DARK_EVOLUTION_DB[this.currentForm];
+                
+                // Update visual
+                document.getElementById('digimon-sprite').textContent = form.emoji;
+                document.getElementById('digimon-sprite').style.filter = form.aura;
+                
+                // Special classes
+                document.getElementById('digimon-sprite').className = `text-[220px] transition-all duration-700 ${form.specialClass || ''}`;
+                
+                // Update info
+                document.getElementById('digimon-name').textContent = form.name;
+                document.getElementById('level-badge').textContent = form.level;
+                document.getElementById('digimon-desc').textContent = form.desc;
+                document.getElementById('attr-display').textContent = form.attribute;
+                document.getElementById('field-display').textContent = form.field;
+                document.getElementById('phase-display').textContent = form.level.toUpperCase();
+                
+                // Update traits
+                const traitsContainer = document.getElementById('special-traits');
+                traitsContainer.innerHTML = form.traits.map(t => 
+                    `<span class="px-2 py-1 rounded bg-purple-900/30 border border-purple-700/30 text-xs text-purple-300">${t}</span>`
+                ).join('');
+                
+                // Update stats
+                this.updateBar('seduction', this.stats.seduction, 'pink');
+                this.updateBar('darkness', this.stats.darkness, 'purple');
+                this.updateBar('corruption', this.stats.corruption, 'red');
+                this.updateBar('loyalty', this.stats.loyalty, 'yellow');
+                
+                // Update virus load display
+                const virusPercent = Math.round((this.stats.darkness + this.stats.corruption) / 2);
+                document.getElementById('virus-display').textContent = virusPercent + '%';
+                document.getElementById('virus-display').className = `cinzel font-bold ${virusPercent > 80 ? 'text-red-500' : virusPercent > 50 ? 'text-pink-500' : 'text-purple-400'}`;
+                
+                this.checkEvolutionReadiness();
+            }
+
+            updateBar(stat, value, color) {
+                document.getElementById(`${stat}-val`).textContent = Math.round(value) + '%';
+                document.getElementById(`${stat}-bar`).style.width = value + '%';
+                
+                // Color intensity based on value
+                const intensity = Math.floor(value / 20);
+                document.getElementById(`${stat}-bar`).className = `stat-bar h-full bg-gradient-to-r from-${color}-${800 + intensity * 100} to-${color}-${400 + intensity * 100}`;
+            }
+        }
+
+        // Initialize
+        const companion = new DarkCompanion();
+    </script>
+</body>
+</html>
